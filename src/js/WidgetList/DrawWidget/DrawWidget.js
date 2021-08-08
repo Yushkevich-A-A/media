@@ -1,11 +1,12 @@
 export default class DrawWidget {
   constructor(error, text, audio, video) {
     this.error = error;
+    this.typePost = null;
     this.newText = text;
     this.newAudio = audio;
     this.newVideo = video;
     this.inputText = null;
-    this.arrData = [];
+    this.cancellationTrack = null;
     this.init();
   }
 
@@ -65,21 +66,43 @@ export default class DrawWidget {
       }
 
       if(event.target.closest('.audio-icon')) {
+        if (!this.capabilityMediaDevices || !this.capabilityMediaRecorder) {
+          // create error device
+          return
+        }
+        this.typePost = 'audio';
         this.activateVideoAudio();
-        this.trackAudio()
+        this.getCoordinate(data => this.newAudio.recordAudio(data.coords, this.postList))
       }
 
       if(event.target.closest('.block-track-submit')) {
-        this.recorder.stop();
+        if (this.typePost === 'audio') {
+          this.newAudio.stopRecordAudio();
+        } else {
+          this.newVideo.stopRecordVideo();
+        }
         this.activateText();
-      }
-
-      if(event.target.closest('.video-icon')) {
-        this.activateVideoAudio();
+        this.typePost = null;
       }
 
       if(event.target.closest('.block-track-cancel')) {
+        if (this.typePost === 'audio') {
+          this.newAudio.cancellationRecordAudio();
+        } else {
+          this.newVideo.cancellationRecordVideo();
+        }
         this.activateText();
+        this.typePost = null;
+      }
+
+      if(event.target.closest('.video-icon')) {
+        if (!this.capabilityMediaDevices || !this.capabilityMediaRecorder) {
+          // create error device
+          return
+        }
+        this.typePost = 'video';
+        this.activateVideoAudio();
+        this.getCoordinate(data => this.newVideo.recordVideo(data.coords, this.postList))
       }
     });
   }
@@ -162,60 +185,6 @@ export default class DrawWidget {
   activateText() {
     this.blockTrackAudioVideo.classList.add('disable');
     this.inputNewPostText.classList.remove('disable');
-  }
-
-  async trackAudio() {
-
-    const li = document.createElement('li');
-    li.classList.add('item-post');
-    li.innerHTML = `<div class="post-content-block">
-                      <audio class="audio" controls></audio> 
-                      <div class="post-content-coord"></div>
-                    </div>
-                    <div class="post-date-block"></div>`;
-                    this.postList.appendChild(li);
-    const postContent = li.querySelector('.audio');
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: false,
-    })
-
-    this.recorder = new MediaRecorder(stream);
-    const chunks = [];
-
-    this.recorder.addEventListener('dataavaliable', event => {
-      console.log(event);
-      chunks.push(event.data);
-    })
-
-    this.recorder.addEventListener('stop', event => {
-      console.log(event);
-      stream.getTracks().forEach( track=> track.stop());
-      const blob = new Blob(chunks);
-      postContent.src = URL.createObjectURL(blob);
-    });
-
-    this.recorder.start();
-  }
-
-  drawNewItemAudio(pos, audio, parent) {
-    console.log(audio);
-    const li = document.createElement('li');
-    li.classList.add('item-post');
-    li.innerHTML = `<div class="post-content-block">
-                      <audio class="audio" controls></audio> 
-                      <div class="post-content-coord"></div>
-                    </div>
-                    <div class="post-date-block"></div>`;
-    parent.appendChild(li);
-    const postContent = li.querySelector('.audio');
-    postContent.src = audio;
-    const postContentCoord = li.querySelector('.post-content-coord');
-    const { latitude, longitude } = pos;
-    postContentCoord.textContent = `[${latitude}, -${longitude}]`;
-    const postDateBlock = li.querySelector('.post-date-block');
-    // postDateBlock.textContent = moment().format('DD.MM.YYYY HH:mm');
   }
 }
 
