@@ -1,0 +1,174 @@
+.widget-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.widget-list {
+  position: relative;
+  margin-top: 30px;
+  width: 750px;
+}
+
+.post-list {
+  width: 100%;
+}
+
+.item-post {
+  background-color: #fff;
+  border: 1px solid #a8a8a8;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.item-post::before {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 20px;
+  height: 20px;
+  line-height: 0;
+  left: 15px;
+  background-color: #fff;
+  border: 1px solid #a8a8a8;
+  border-radius: 50%;
+}
+
+.block-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.block-side-line {
+  width: 30px;
+  background-color: #fff;
+  border: 1px solid #a8a8a8;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.post-content-block {
+  width: 100%;
+}
+
+.post-content-text {
+  margin-bottom: 15px;
+}
+
+.audio,
+.video {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.post-content-coord::after {
+  content: '\1F441';
+  display: inline-block;
+  margin-left: 5px;;
+}
+
+.post-date-block {
+  white-space: nowrap;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+
+.input-new-post {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #a8a8a8;
+  height: 55px;
+}
+
+.input-new-post-text {
+  display: flex;
+  align-items: center;
+}
+
+.block-input,
+.input-text {
+  width: 100%;
+}
+
+.input-text {
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 5px;
+}
+
+
+.block-icons-video-audio {
+  display: flex;
+  padding-right: 10px;
+
+}
+
+.button-icon  {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #a8a8a8;
+  border-radius: 50%;
+}
+
+.audio-icon {
+  background-image: url('./../../../image/microphone.png');
+}
+
+.video-icon {
+  background-image: url('./../../../image/camera.png');
+}
+
+.audio-icon,
+.video-icon {
+  background-repeat: no-repeat;
+  background-size: 20px;
+  background-position: center;
+  margin-left: 15px;
+}
+
+.block-track-audio-video {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 15px;
+}
+
+.block-track-submit::before {
+  content: '\2714';
+}
+
+.block-track-cancel::before {
+  content: '\2718';
+}
+
+.block-track-submit::before,
+.block-track-cancel::before {
+  font-size: 20px;
+  color: #a8a8a8;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.block-track-timer {
+  margin-left: 15px;
+  margin-right: 15px;
+  width: 50px;
+  text-align: center;
+}

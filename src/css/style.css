@@ -16,13 +16,6 @@ body {
   background-image: url('../image/patternbg.png');
 }
 
-.widget-wrapper {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.widget-list {
-  margin-top: 30px;
+.disable {
+  display: none;
 }

@@ -1,0 +1,2 @@
+// js
+import './WidgetList/Widget';
