@@ -22,7 +22,7 @@ export default class DrawVideoPost {
     postDateBlock.textContent = moment().format('DD.MM.YYYY HH:mm');
   }
 
-  async recordVideo(coords, parent) {
+  async recordVideo(coords, parent, streamElement, handler) {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
@@ -30,6 +30,12 @@ export default class DrawVideoPost {
 
     this.recorder = new MediaRecorder(stream);
     const chunks = [];
+
+    this.recorder.addEventListener('start', event => {
+      streamElement.srcObject = stream;
+      streamElement.play();
+      handler();
+    })
 
     this.recorder.addEventListener('dataavailable', event => {
       chunks.push(event.data);
@@ -45,6 +51,7 @@ export default class DrawVideoPost {
       const blob = new Blob(chunks);
       this.drawNewItemVideo(coords, blob, parent);
       this.recorder = null;
+      streamElement.srcObject = null;
     });
 
     this.recorder.start();

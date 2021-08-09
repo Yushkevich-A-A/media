@@ -23,8 +23,7 @@ export default class DrawAudioPost {
     postDateBlock.textContent = moment().format('DD.MM.YYYY HH:mm');
   }
 
-  
-  async recordAudio(coords, parent) {
+  async recordAudio(coords, parent, handler) {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: false,
@@ -33,9 +32,12 @@ export default class DrawAudioPost {
     this.recorder = new MediaRecorder(stream);
     const chunks = [];
 
+    this.recorder.addEventListener('start', event => {
+      handler();
+    })
+
     this.recorder.addEventListener('dataavailable', event => {
       chunks.push(event.data);
-
     })
 
     this.recorder.addEventListener('stop', event => {
@@ -49,8 +51,6 @@ export default class DrawAudioPost {
       this.recorder = null;
     });
     this.recorder.start();
-
-    console.log('Pfgbcm gjikf')
   }
 
   stopRecordAudio() {

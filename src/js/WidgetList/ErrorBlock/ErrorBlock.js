@@ -22,15 +22,19 @@ export default class ErrorBlock {
                               <p class="error-text">К сожалению, нам не удалось определить ваше местоположение, пожалуйста, дайте разрешение на использование геолокации, либо введите координаты вручную.</p>
                             </div>
                             <form class='form-error'>
-                              <div class="block-input-coord">
-                                <label for="coord" class="label-coord">
-                                  Широта  долгота через запятую:
-                                </label>
-                                <input type="text" name="coord" class="input-coord">
+                              <div>
+                                <div class="block-input-coord">
+                                  <label for="coord" class="label-coord">
+                                    Широта и долгота через запятую:
+                                  </label>
+                                  <input type="text" name="coord" class="input-coord">
+                                </div>
+                                <div class="validation-error disable">
+                                </div>
                               </div>
                               <div class="block-buttons">
                                 <button class="button-form-error error-cancel">Отмена</button>
-                                <input type="submit" class="button-form-error error-submit" value="OK">
+                                <button class="button-form-error error-submit">ОК</button>
                               </div>
                             </form>
                           </div>`;
@@ -38,6 +42,7 @@ export default class ErrorBlock {
     this.form = this.blockError.querySelector('.form-error');
     this.blockInputCoord = this.blockError.querySelector('.block-input-coord')
     this.input = this.blockError.querySelector('.input-coord');
+    this.errorInput = this.blockError.querySelector('.validation-error');
   }
 
   showError() {
@@ -66,28 +71,21 @@ export default class ErrorBlock {
     }
     return {
         latitude: value[0],
-        longitude: value[1]
+        longitude: value[1],
       }
   }
 
   createValidationError(text) {
-    this.validationError = document.createElement('div');
-    this.validationError.classList.add('validation-error');
-    this.validationError.textContent = text;
-    this.blockInputCoord.appendChild(this.validationError);
-    this.validationError.style.top = this.input.offsetTop + this.input.offsetHeight + 'px';
-    this.validationError.style.left = this.input.offsetLeft + 'px';
+    this.errorInput.classList.remove('disable');
     this.input.classList.add('input-error');
-
+    this.errorInput.style.top = this.input.offsetTop + this.input.offsetHeight + 'px';
+    this.errorInput.style.left = this.input.offsetLeft + 'px';
+    this.errorInput.textContent = text;
   } 
 
   removeValidationError() {
-    if (this.validationError === null) {
-      return;
-    }
-
-    this.validationError.parentElement.removeChild(this.validationError);
-    this.validationError = null;
+    this.errorInput.textContent = '';
+    this.errorInput.classList.add('disable');
     this.input.classList.remove('input-error');
   } 
 }

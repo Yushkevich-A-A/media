@@ -41,7 +41,7 @@
 }
 
 .block-input-coord {
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
 .block-buttons {
@@ -67,5 +67,6 @@
 }
 
 .validation-error {
+  position: absolute;
   color: red;
 }

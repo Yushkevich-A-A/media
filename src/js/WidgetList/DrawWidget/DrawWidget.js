@@ -1,3 +1,8 @@
+import moment from 'moment';
+import 'moment/locale/ru';
+
+moment().local('ru');
+
 export default class DrawWidget {
   constructor(error, text, audio, video) {
     this.error = error;
@@ -7,6 +12,7 @@ export default class DrawWidget {
     this.newVideo = video;
     this.inputText = null;
     this.cancellationTrack = null;
+    this.timer = null;
     this.init();
   }
 
@@ -47,32 +53,34 @@ export default class DrawWidget {
       }
     });
 
-    this.error.form.addEventListener('submit', event => {
-      event.preventDefault();
-      const value = this.error.checkInputText(this.error.input.value);
-      if(!value) {
-        this.error.createValidationError('Введите значения широты и долготы через запятую');
-        return;
-      }
-      this.newText.drawNewItemText(value, this.inputText, this.postList);
-      this.error.hideError();
-      this.inputText = null;
-    });
-
     document.addEventListener('click', event => {
+      event.preventDefault();
       if(event.target.closest('.error-cancel')) {
+        this.error.removeValidationError();
         this.error.hideError();
         this.inputText = null;
+      }
+
+      if(event.target.closest('.error-submit')) {
+        this.submitFuncValidate();
       }
 
       if(event.target.closest('.audio-icon')) {
         if (!this.capabilityMediaDevices || !this.capabilityMediaRecorder) {
           // create error device
-          return
+          return;
         }
         this.typePost = 'audio';
-        this.activateVideoAudio();
-        this.getCoordinate(data => this.newAudio.recordAudio(data.coords, this.postList))
+        this.getCoordinate(data => this.startRecordAudio(data.coords));
+      }
+
+      if(event.target.closest('.video-icon')) {
+        if (!this.capabilityMediaDevices || !this.capabilityMediaRecorder) {
+          // create error device
+          return;
+        }
+        this.typePost = 'video';
+        this.getCoordinate(data => this.startRecordVideo(data.coords) );
       }
 
       if(event.target.closest('.block-track-submit')) {
@@ -83,6 +91,7 @@ export default class DrawWidget {
         }
         this.activateText();
         this.typePost = null;
+        this.timerStop();
       }
 
       if(event.target.closest('.block-track-cancel')) {
@@ -93,16 +102,7 @@ export default class DrawWidget {
         }
         this.activateText();
         this.typePost = null;
-      }
-
-      if(event.target.closest('.video-icon')) {
-        if (!this.capabilityMediaDevices || !this.capabilityMediaRecorder) {
-          // create error device
-          return
-        }
-        this.typePost = 'video';
-        this.activateVideoAudio();
-        this.getCoordinate(data => this.newVideo.recordVideo(data.coords, this.postList))
+        this.timerStop();
       }
     });
   }
@@ -120,21 +120,15 @@ export default class DrawWidget {
   }
   
   checkAPI() {
-    if (navigator.geolocation) {
-      this.capabilityGeolocation = true;
-    } else {
+    if (!navigator.geolocation) {
       this.capabilityGeolocation = false;
-    }
+    } 
 
-    if (navigator.mediaDevices) {
-      this.capabilityMediaDevices = true;
-    } else {
+    if (!navigator.mediaDevices) {
       this.capabilityMediaDevices = false;
     }
 
-    if (window.MediaRecorder) {
-      this.capabilityMediaRecorder = true;
-    } else {
+    if (!window.MediaRecorder) {
       this.capabilityMediaRecorder = false;
     }
   }
@@ -145,8 +139,13 @@ export default class DrawWidget {
     widget.innerHTML = `<div class="widget-list">
                           <div class="block-content">
                             <div class="block-side-line"></div>
-                            <ul class="post-list">
-                            </ul>
+                            <div class="block-content-and-stream">
+                              <ul class="post-list">
+                              </ul>
+                              <div class="stream-block disable">
+                                <video class="video-stream" muted></video>
+                              </div>
+                            </div>
                           </div>
                           <div class="input-new-post">
                             <div class="input-new-post-text">
@@ -162,11 +161,9 @@ export default class DrawWidget {
                             </div>
                             <div class="block-track-audio-video disable">
                               <div class="button-icon block-track-submit"></div>
-                              <div class="block-track-timer">
-                                00:05
-                              </div>
+                              <div class="block-track-timer"></div>
                               <div class="button-icon block-track-cancel"></div>
-                            </div>
+                              </div>
                           </div>
                         </div>`;
     document.body.appendChild(widget);
@@ -175,16 +172,76 @@ export default class DrawWidget {
     this.trackTimer = widget.querySelector('.block-track-timer');
     this.blockTrackAudioVideo = widget.querySelector('.block-track-audio-video');
     this.inputNewPostText = widget.querySelector('.input-new-post-text');
+    this.streamBlock = widget.querySelector('.stream-block');
+    this.videoStream = widget.querySelector('.video-stream');
   }
 
-  activateVideoAudio() {
+  activateVideo() {
+    this.inputNewPostText.classList.add('disable');
+    this.blockTrackAudioVideo.classList.remove('disable');
+    this.streamBlock.classList.remove('disable');
+  }
+
+  activateAudio() {
     this.inputNewPostText.classList.add('disable');
     this.blockTrackAudioVideo.classList.remove('disable');
   }
 
   activateText() {
+    this.streamBlock.classList.add('disable');
     this.blockTrackAudioVideo.classList.add('disable');
     this.inputNewPostText.classList.remove('disable');
+  }
+
+  timerStart() {
+    let ms = 0
+    this.trackTimer.textContent = moment(ms).format('mm:ss');
+    this.timer = setInterval(() => {
+      ms += 1000;
+      this.trackTimer.textContent = moment(ms).format('mm:ss');
+    }, 1000)
+  }
+
+  timerStop() {
+    clearInterval(this.timer);
+    this.timer = null;
+  }
+
+  startRecordAudio(coord) {
+    this.activateAudio();
+    this.newAudio.recordAudio(
+      coord, 
+      this.postList, 
+      () => this.timerStart())
+  };
+
+  startRecordVideo(coord) {
+    this.activateVideo();
+    this.newVideo.recordVideo(
+      coord, 
+      this.postList, 
+      this.videoStream, 
+      () => this.timerStart()
+    )
+  };
+
+  submitFuncValidate() {
+    const value = this.error.checkInputText(this.error.input.value);
+    if(!value) {
+      this.error.createValidationError('Введите значения широты и долготы через запятую');
+      return;
+    }
+    this.error.removeValidationError();
+    if (this.typePost === 'audio') {
+      console.log(this.typePost);
+      this.startRecordAudio(value);
+    } else if (this.typePost === 'video') {
+      this.startRecordVideo(value);
+    } else {
+      this.newText.drawNewItemText(value, this.inputText, this.postList);
+    }
+    this.error.hideError();
+    this.inputText = null;
   }
 }
 
