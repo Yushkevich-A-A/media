@@ -4,15 +4,16 @@ import 'moment/locale/ru';
 moment().local('ru');
 
 export default class DrawWidget {
-  constructor(error, text, audio, video) {
+  constructor(error, errorPermissions, text, audio, video) {
     this.error = error;
-    this.typePost = null;
+    this.errorPermissions = errorPermissions;
     this.newText = text;
     this.newAudio = audio;
     this.newVideo = video;
     this.inputText = null;
     this.cancellationTrack = null;
     this.timer = null;
+    this.typePost = null;
     this.init();
   }
 
@@ -66,8 +67,8 @@ export default class DrawWidget {
       }
 
       if(event.target.closest('.audio-icon')) {
-        if (!this.capabilityMediaDevices || !this.capabilityMediaRecorder) {
-          // create error device
+        debugger;
+        if (this.checkAvaliableMedia()) {
           return;
         }
         this.typePost = 'audio';
@@ -75,8 +76,7 @@ export default class DrawWidget {
       }
 
       if(event.target.closest('.video-icon')) {
-        if (!this.capabilityMediaDevices || !this.capabilityMediaRecorder) {
-          // create error device
+        if (this.checkAvaliableMedia()) {
           return;
         }
         this.typePost = 'video';
@@ -120,17 +120,9 @@ export default class DrawWidget {
   }
   
   checkAPI() {
-    if (!navigator.geolocation) {
-      this.capabilityGeolocation = false;
-    } 
-
-    if (!navigator.mediaDevices) {
-      this.capabilityMediaDevices = false;
-    }
-
-    if (!window.MediaRecorder) {
-      this.capabilityMediaRecorder = false;
-    }
+    this.capabilityGeolocation = !!navigator.geolocation;
+    this.capabilityMediaDevices = !!navigator.mediaDevices;
+    this.capabilityMediaRecorder = !!window.MediaRecorder;
   }
 
   drawWidget() {
@@ -233,7 +225,6 @@ export default class DrawWidget {
     }
     this.error.removeValidationError();
     if (this.typePost === 'audio') {
-      console.log(this.typePost);
       this.startRecordAudio(value);
     } else if (this.typePost === 'video') {
       this.startRecordVideo(value);
@@ -242,6 +233,18 @@ export default class DrawWidget {
     }
     this.error.hideError();
     this.inputText = null;
+  }
+
+  checkAvaliableMedia() {
+    if (!this.capabilityMediaRecorder) {
+      this.errorPermissions.openPermissionError();
+      return true;
+    }
+    if (!this.capabilityMediaDevices) {
+      this.errorPermissions.openPermissionError();
+      return true;
+    }
+    return false;
   }
 }
 
