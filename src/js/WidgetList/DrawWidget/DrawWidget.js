@@ -4,8 +4,8 @@ import 'moment/locale/ru';
 moment().local('ru');
 
 export default class DrawWidget {
-  constructor(error, errorPermissions, text, audio, video) {
-    this.error = error;
+  constructor(handlerCoord, errorPermissions, text, audio, video) {
+    this.handlerCoord = handlerCoord;
     this.errorPermissions = errorPermissions;
     this.newText = text;
     this.newAudio = audio;
@@ -30,7 +30,7 @@ export default class DrawWidget {
       }
 
       if (event.target.closest('.input-coord') && event.key === 'Enter') {
-        document.querySelector('.error-submit').click();
+        document.querySelector('.handlercoord-submit').click();
         return;
       }
 
@@ -56,13 +56,13 @@ export default class DrawWidget {
 
     document.addEventListener('click', event => {
       event.preventDefault();
-      if(event.target.closest('.error-cancel')) {
-        this.error.removeValidationError();
-        this.error.hideError();
+      if(event.target.closest('.handlercoord-cancel')) {
+        this.handlerCoord.removeValidationHandlerCoord();
+        this.handlerCoord.hideHandlerCoord();
         this.inputText = null;
       }
 
-      if(event.target.closest('.error-submit')) {
+      if(event.target.closest('.handlercoord-submit')) {
         this.submitFuncValidate();
       }
 
@@ -112,10 +112,10 @@ export default class DrawWidget {
 
       navigator.geolocation.getCurrentPosition(
         (pos) => handler(pos),
-        () => this.error.showError(),
+        () => this.handlerCoord.showHandlerCoord(),
       );
     } else {
-      this.error.showError();
+      this.handlerCoord.showHandlerCoord();
     }
   }
   
@@ -218,12 +218,13 @@ export default class DrawWidget {
   };
 
   submitFuncValidate() {
-    const value = this.error.checkInputText(this.error.input.value);
+    debugger;
+    const value = this.handlerCoord.checkInputText(this.handlerCoord.input.value);
     if(!value) {
-      this.error.createValidationError('Введите значения широты и долготы через запятую');
+      this.handlerCoord.createValidationHandlerCoord('Введите значения широты и долготы через запятую');
       return;
     }
-    this.error.removeValidationError();
+    this.handlerCoord.removeValidationHandlerCoord();
     if (this.typePost === 'audio') {
       this.startRecordAudio(value);
     } else if (this.typePost === 'video') {
@@ -231,7 +232,7 @@ export default class DrawWidget {
     } else {
       this.newText.drawNewItemText(value, this.inputText, this.postList);
     }
-    this.error.hideError();
+    this.handlerCoord.hideHandlerCoord();
     this.inputText = null;
   }
 
