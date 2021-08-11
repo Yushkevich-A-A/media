@@ -4,57 +4,65 @@ import 'moment/locale/ru';
 moment().local('ru');
 
 export default class DrawVideoPost {
-  drawNewItemVideo(pos, blob, parent) {
-    const li = document.createElement('li');
-    li.classList.add('item-post');
-    li.innerHTML = `<div class="post-content-block">
+  constructor() {
+    this.handlerCoord = null;
+  }
+  
+  drawNewItemVideo(blob, parent) {
+    this.li = document.createElement('li');
+    this.li.classList.add('item-post');
+    this.li.innerHTML = `<div class="post-content-block">
                       <video class="video" controls></video>
                       <div class="post-content-coord"></div>
                     </div>
                     <div class="post-date-block"></div>`;
-    parent.appendChild(li);
-    const postContent = li.querySelector('.video');
+    parent.appendChild(this.li);
+    const postContent = this.li.querySelector('.video');
     postContent.src = URL.createObjectURL(blob);
-    const postContentCoord = li.querySelector('.post-content-coord');
-    const { latitude, longitude } = pos;
-    postContentCoord.textContent = `[${latitude}, -${longitude}]`;
-    const postDateBlock = li.querySelector('.post-date-block');
+    const postDateBlock = this.li.querySelector('.post-date-block');
     postDateBlock.textContent = moment().format('DD.MM.YYYY HH:mm');
   }
 
-  async recordVideo(coords, parent, streamElement, handler) {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-    })
+  async recordVideo(coordsFunc, parent, streamElement, handlerStart, handlerError) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      })
 
-    this.recorder = new MediaRecorder(stream);
-    const chunks = [];
+      this.recorder = new MediaRecorder(stream);
+      const chunks = [];
 
-    this.recorder.addEventListener('start', event => {
-      streamElement.srcObject = stream;
-      streamElement.play();
-      handler();
-    })
+      this.recorder.addEventListener('start', event => {
+        console.log(streamElement);
+        streamElement.srcObject = stream;
+        streamElement.play();
+        handlerStart();
+        console.log(this.setCoorditateCurrentElement);
+      })
 
-    this.recorder.addEventListener('dataavailable', event => {
-      chunks.push(event.data);
+      this.recorder.addEventListener('dataavailable', event => {
+        chunks.push(event.data);
 
-    })
+      })
 
-    this.recorder.addEventListener('stop', event => {
-      stream.getTracks().forEach(track=>track.stop());
-      if (this.cancellationTrack) {
+      this.recorder.addEventListener('stop', event => {
+        stream.getTracks().forEach(track=>track.stop());
+        if (this.cancellationTrack) {
+          this.recorder = null;
+          return;
+        }
+        const blob = new Blob(chunks);
+        this.drawNewItemVideo(blob, parent);
         this.recorder = null;
-        return;
-      }
-      const blob = new Blob(chunks);
-      this.drawNewItemVideo(coords, blob, parent);
-      this.recorder = null;
-      streamElement.srcObject = null;
-    });
+        streamElement.srcObject = null;
+        coordsFunc();
+      });
 
-    this.recorder.start();
+      this.recorder.start();
+    } catch(err) {
+      handlerError();
+    }
   }
 
 
@@ -66,5 +74,17 @@ export default class DrawVideoPost {
   cancellationRecordVideo() {
     this.cancellationTrack = true;
     this.recorder.stop()
+  }
+
+  setCoorditateCurrentElement(coord) {
+    const postContentCoord = this.li.querySelector('.post-content-coord');
+    const { latitude, longitude } = coord;
+    postContentCoord.textContent = `[${latitude}, -${longitude}]`;
+    this.li = null;
+  }
+
+  abortCreateElement() {
+    this.li.parentElement.removeChild(this.li);
+    this.li = null;
   }
 }

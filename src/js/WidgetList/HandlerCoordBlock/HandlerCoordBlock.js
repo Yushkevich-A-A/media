@@ -1,8 +1,6 @@
 
 export default class HandlerCoordBlock {
   constructor() {
-    this.validationHandlerCoord = null;
-    this.init();
   }
 
   init() {
@@ -59,7 +57,7 @@ export default class HandlerCoordBlock {
       return false;
     }
 
-    let value = data.replace(/[-*+?^${}()|[\]\\]/g, ' ').split(',').map(item => item.trim());
+    let value = data.replace(/[*+?^${}()|[\]\\]/g, ' ').replace(/[−]/g, '-').split(',').map(item => item.trim());
 
     if (value.length !== 2) {
       return false;
@@ -70,8 +68,8 @@ export default class HandlerCoordBlock {
       return false;
     }
     return {
-        latitude: value[0],
-        longitude: value[1],
+        latitude: Number(value[0]),
+        longitude: Number(value[1]),
       }
   }
 
