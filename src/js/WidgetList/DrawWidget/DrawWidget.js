@@ -38,7 +38,7 @@ export default class DrawWidget {
                             </div>`;
         document.body.appendChild(widget);
         this.postList = widget.querySelector('.post-list');
-        // this.newItemBlock = widget.querySelector('.input-new-post');
+        this.newItemBlock = widget.querySelector('.input-new-post');
         this.trackTimer = widget.querySelector('.block-track-timer');
         this.blockTrackAudioVideo = widget.querySelector('.block-track-audio-video');
         this.inputNewPostText = widget.querySelector('.input-new-post-text');
@@ -61,5 +61,9 @@ export default class DrawWidget {
         this.streamBlock.classList.add('disable');
         this.blockTrackAudioVideo.classList.add('disable');
         this.inputNewPostText.classList.remove('disable');
+      }
+
+      scrollToBottomList() {
+        
       }
 }

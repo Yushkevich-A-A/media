@@ -62,7 +62,6 @@ export default class WidgetController {
       }
 
       if(event.target.closest('.handlercoord-submit')) {
-        console.log(this.typePost)
         this.submitFuncValidate();
       }
 
@@ -167,12 +166,11 @@ export default class WidgetController {
   }
 
   rejectFuncValidate() {
-    // console.log(this.typePost)
     this.handlerCoord.removeValidationHandlerCoord();
     if (this.typePost === 'audio') {
       this.newAudio.abortCreateElement();
     } else if (this.typePost === 'video') {
-      this.startRecordVideo(value);
+      this.newVideo.abortCreateElement();
     }
     this.handlerCoord.hideHandlerCoord();
     this.inputText = null;

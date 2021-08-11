@@ -11,12 +11,14 @@ export default class DrawAudioPost {
   drawNewItemAudio(blob, parent) {
 
     this.li = document.createElement('li');
-    this.li.classList.add('item-post');
-    this.li.innerHTML = `<div class="post-content-block">
-                      <audio class="audio" controls></audio> 
-                      <div class="post-content-coord"></div>
-                    </div>
-                    <div class="post-date-block"></div>`;
+    this.li.classList.add('li-item-post');
+    this.li.innerHTML = `<div class="item-post">
+                            <div class="post-content-block">
+                              <audio class="audio" controls></audio> 
+                              <div class="post-content-coord"></div>
+                            </div>
+                            <div class="post-date-block"></div>
+                          </div>`;
     parent.appendChild(this.li);
     const postContent = this.li .querySelector('.audio');
     postContent.src = URL.createObjectURL(blob);

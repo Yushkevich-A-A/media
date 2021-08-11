@@ -18,13 +18,36 @@
   .block-content-and-stream {
     width: 100%;
   }
-
-  .post-list {
-    height: 400px;
-  }
   
   .video-stream {
     width: 100%;
+  }
+
+  .post-list {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: scroll;
+  }
+  
+  .li-item-post {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .li-item-post::before {
+    content: '';
+    display: block;
+    width: 25px;
+    height: 25px;
+    line-height: 0;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: #fff;
+    border: 1px solid #a8a8a8;
+    border-radius: 50%;
   }
   
   .item-post {
@@ -35,25 +58,22 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
-  }
-  
-  .item-post::before {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 25px;
-    height: 25px;
-    line-height: 0;
-    left: 20px;
-    background-color: #fff;
-    border: 1px solid #a8a8a8;
-    border-radius: 50%;
+    max-width: 650px;
+    width: 100%;
   }
   
   .block-content {
     display: flex;
     justify-content: space-between;
+    height: 500px;
+    position: relative;
   }
+
+  .stream-block {
+    position: absolute;
+    bottom: 0;
+  }
+  
   
   .block-side-line {
     width: 30px;

@@ -57,7 +57,7 @@ export default class HandlerCoordBlock {
       return false;
     }
 
-    let value = data.replace(/[*+?^${}()|[\]\\]/g, ' ').replace(/[−]/g, '-').split(',').map(item => item.trim());
+    let value = data.replace(/[−*+?^${}()|[\]\\]/g, ' ').split(',').map(item => item.trim());
 
     if (value.length !== 2) {
       return false;

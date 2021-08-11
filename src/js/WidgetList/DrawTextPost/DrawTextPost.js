@@ -10,12 +10,14 @@ export default class DrawTextPost {
   
   drawNewItemText(pos, text, parent) {
     const li = document.createElement('li');
-    li.classList.add('item-post');
-    li.innerHTML = `<div class="post-content-block">
-                      <p class="post-content-text"></p> 
-                      <div class="post-content-coord"></div>
-                    </div>
-                    <div class="post-date-block"></div>`;
+    li.classList.add('li-item-post');
+    li.innerHTML = `<div class="item-post">
+                      <div class="post-content-block">
+                        <p class="post-content-text"></p> 
+                        <div class="post-content-coord"></div>
+                      </div>
+                      <div class="post-date-block"></div>
+                    </div>`;
     parent.appendChild(li);
     const postContentText = li.querySelector('.post-content-text');
     postContentText.textContent = text;
