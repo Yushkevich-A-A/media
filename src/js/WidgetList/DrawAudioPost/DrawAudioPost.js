@@ -19,7 +19,7 @@ export default class DrawAudioPost {
                             </div>
                             <div class="post-date-block"></div>
                           </div>`;
-    parent.appendChild(this.li);
+    parent.insertAdjacentElement('afterBegin',this.li);
     const postContent = this.li .querySelector('.audio');
     postContent.src = URL.createObjectURL(blob);
     const postDateBlock = this.li .querySelector('.post-date-block');
@@ -75,7 +75,7 @@ export default class DrawAudioPost {
   setCoorditateCurrentElement(coord) {
     const postContentCoord = this.li.querySelector('.post-content-coord');
     const { latitude, longitude } = coord;
-    postContentCoord.textContent = `[${latitude}, -${longitude}]`;
+    postContentCoord.textContent = `[${latitude}, ${longitude}]`;
     this.li = null;
   }
 

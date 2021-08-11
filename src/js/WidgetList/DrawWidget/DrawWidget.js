@@ -62,8 +62,4 @@ export default class DrawWidget {
         this.blockTrackAudioVideo.classList.add('disable');
         this.inputNewPostText.classList.remove('disable');
       }
-
-      scrollToBottomList() {
-        
-      }
 }

@@ -10,13 +10,15 @@ export default class DrawVideoPost {
   
   drawNewItemVideo(blob, parent) {
     this.li = document.createElement('li');
-    this.li.classList.add('item-post');
-    this.li.innerHTML = `<div class="post-content-block">
-                      <video class="video" controls></video>
-                      <div class="post-content-coord"></div>
-                    </div>
-                    <div class="post-date-block"></div>`;
-    parent.appendChild(this.li);
+    this.li.classList.add('li-item-post');
+    this.li.innerHTML = `<div class="item-post">
+                            <div class="post-content-block">
+                              <video class="video" controls></video>
+                              <div class="post-content-coord"></div>
+                            </div>
+                            <div class="post-date-block"></div>
+                          </div>`;
+    parent.insertAdjacentElement('afterBegin',this.li);
     const postContent = this.li.querySelector('.video');
     postContent.src = URL.createObjectURL(blob);
     const postDateBlock = this.li.querySelector('.post-date-block');
@@ -79,7 +81,7 @@ export default class DrawVideoPost {
   setCoorditateCurrentElement(coord) {
     const postContentCoord = this.li.querySelector('.post-content-coord');
     const { latitude, longitude } = coord;
-    postContentCoord.textContent = `[${latitude}, -${longitude}]`;
+    postContentCoord.textContent = `[${latitude}, ${longitude}]`;
     this.li = null;
   }
 

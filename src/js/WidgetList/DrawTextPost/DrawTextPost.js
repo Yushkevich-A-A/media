@@ -18,7 +18,7 @@ export default class DrawTextPost {
                       </div>
                       <div class="post-date-block"></div>
                     </div>`;
-    parent.appendChild(li);
+    parent.insertAdjacentElement('afterBegin', li);
     const postContentText = li.querySelector('.post-content-text');
     postContentText.textContent = text;
     const postContentCoord = li.querySelector('.post-content-coord');
