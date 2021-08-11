@@ -9,7 +9,6 @@ export default class DrawAudioPost {
   }
 
   drawNewItemAudio(blob, parent) {
-
     this.li = document.createElement('li');
     this.li.classList.add('li-item-post');
     this.li.innerHTML = `<div class="item-post">
@@ -19,33 +18,33 @@ export default class DrawAudioPost {
                             </div>
                             <div class="post-date-block"></div>
                           </div>`;
-    parent.insertAdjacentElement('afterBegin',this.li);
-    const postContent = this.li .querySelector('.audio');
+    parent.insertAdjacentElement('afterBegin', this.li);
+    const postContent = this.li.querySelector('.audio');
     postContent.src = URL.createObjectURL(blob);
-    const postDateBlock = this.li .querySelector('.post-date-block');
+    const postDateBlock = this.li.querySelector('.post-date-block');
     postDateBlock.textContent = moment().format('DD.MM.YYYY HH:mm');
   }
 
   async recordAudio(coordsFunc, parent, handlerStart, handlerError) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: false,
-      })
+      });
 
       this.recorder = new MediaRecorder(stream);
       const chunks = [];
 
-      this.recorder.addEventListener('start', event => {
+      this.recorder.addEventListener('start', (event) => {
         handlerStart();
-      })
+      });
 
-      this.recorder.addEventListener('dataavailable', event => {
+      this.recorder.addEventListener('dataavailable', (event) => {
         chunks.push(event.data);
-      })
+      });
 
-      this.recorder.addEventListener('stop', event => {
-        stream.getTracks().forEach(track => track.stop());
+      this.recorder.addEventListener('stop', (event) => {
+        stream.getTracks().forEach((track) => track.stop());
         if (this.cancellationTrack) {
           this.recorder = null;
           return;
@@ -57,14 +56,14 @@ export default class DrawAudioPost {
         coordsFunc();
       });
       this.recorder.start();
-    } catch(err) {
+    } catch (err) {
       handlerError();
     }
   }
 
   stopRecordAudio() {
     this.cancellationTrack = false;
-    this.recorder.stop()
+    this.recorder.stop();
   }
 
   cancellationRecordAudio() {

@@ -7,7 +7,7 @@ export default class DrawVideoPost {
   constructor() {
     this.handlerCoord = null;
   }
-  
+
   drawNewItemVideo(blob, parent) {
     this.li = document.createElement('li');
     this.li.classList.add('li-item-post');
@@ -18,7 +18,7 @@ export default class DrawVideoPost {
                             </div>
                             <div class="post-date-block"></div>
                           </div>`;
-    parent.insertAdjacentElement('afterBegin',this.li);
+    parent.insertAdjacentElement('afterBegin', this.li);
     const postContent = this.li.querySelector('.video');
     postContent.src = URL.createObjectURL(blob);
     const postDateBlock = this.li.querySelector('.post-date-block');
@@ -30,26 +30,25 @@ export default class DrawVideoPost {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true,
-      })
+      });
 
       this.recorder = new MediaRecorder(stream);
       const chunks = [];
 
-      this.recorder.addEventListener('start', event => {
+      this.recorder.addEventListener('start', (event) => {
         console.log(streamElement);
         streamElement.srcObject = stream;
         streamElement.play();
         handlerStart();
         console.log(this.setCoorditateCurrentElement);
-      })
+      });
 
-      this.recorder.addEventListener('dataavailable', event => {
+      this.recorder.addEventListener('dataavailable', (event) => {
         chunks.push(event.data);
+      });
 
-      })
-
-      this.recorder.addEventListener('stop', event => {
-        stream.getTracks().forEach(track=>track.stop());
+      this.recorder.addEventListener('stop', (event) => {
+        stream.getTracks().forEach((track) => track.stop());
         if (this.cancellationTrack) {
           this.recorder = null;
           return;
@@ -62,20 +61,19 @@ export default class DrawVideoPost {
       });
 
       this.recorder.start();
-    } catch(err) {
+    } catch (err) {
       handlerError();
     }
   }
 
-
   stopRecordVideo() {
     this.cancellationTrack = false;
-    this.recorder.stop()
+    this.recorder.stop();
   }
 
   cancellationRecordVideo() {
     this.cancellationTrack = true;
-    this.recorder.stop()
+    this.recorder.stop();
   }
 
   setCoorditateCurrentElement(coord) {

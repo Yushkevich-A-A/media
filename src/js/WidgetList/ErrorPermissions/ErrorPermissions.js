@@ -5,7 +5,7 @@ export default class ErrorPermissions {
   }
 
   init() {
-    this.drawPermissionError()
+    this.drawPermissionError();
   }
 
   drawPermissionError() {
@@ -21,20 +21,18 @@ export default class ErrorPermissions {
       </p>
       <button class='permissions-error-button'>Закрыть сообщение</button>
   </div>`;
-  document.body.appendChild(this.wrapperErrorPermission);
+    document.body.appendChild(this.wrapperErrorPermission);
 
-  this.permissionsErrorText = this.wrapperErrorPermission.querySelector('.permissions-error-text');
-  this.permissionsErrorButton = this.wrapperErrorPermission.querySelector('.permissions-error-button');
-  this.permissionsErrorButton.onclick = this.closePermissionError;
+    this.permissionsErrorText = this.wrapperErrorPermission.querySelector('.permissions-error-text');
+    this.permissionsErrorButton = this.wrapperErrorPermission.querySelector('.permissions-error-button');
+    this.permissionsErrorButton.onclick = this.closePermissionError;
   }
 
   openPermissionError() {
     this.wrapperErrorPermission.classList.remove('disable');
-
   }
 
   closePermissionError() {
     this.wrapperErrorPermission.classList.add('disable');
   }
-
 }

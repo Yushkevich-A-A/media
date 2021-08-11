@@ -20,6 +20,13 @@
         "no-unused-vars": "off",
         "no-console": "off",
         "no-plusplus": "off",
-        "no-new": "off"
+        "no-new": "off",
+        "import/no-extraneous-dependencies": "off",
+        "class-methods-use-this": "off",
+        "no-param-reassign": "off",
+        "no-useless-constructor": "off",
+        "no-empty-function": "off",
+        "no-restricted-globals": "off",
+        "consistent-return": "off"
     }
 }

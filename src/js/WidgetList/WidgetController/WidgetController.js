@@ -25,7 +25,7 @@ export default class WidgetController {
   }
 
   listeners() {
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       if (!event.target.closest('.input-text') && !event.target.closest('.input-coord')) {
         return;
       }
@@ -55,27 +55,27 @@ export default class WidgetController {
       }
     });
 
-    document.addEventListener('click', event => {
+    document.addEventListener('click', (event) => {
       event.preventDefault();
-      if(event.target.closest('.handlercoord-cancel')) {
-        this.rejectFuncValidate()
+      if (event.target.closest('.handlercoord-cancel')) {
+        this.rejectFuncValidate();
       }
 
-      if(event.target.closest('.handlercoord-submit')) {
+      if (event.target.closest('.handlercoord-submit')) {
         this.submitFuncValidate();
       }
 
-      if(event.target.closest('.audio-icon')) {
+      if (event.target.closest('.audio-icon')) {
         this.typePost = 'audio';
         this.startRecordAudio();
       }
 
-      if(event.target.closest('.video-icon')) {
-          this.typePost = 'video';
-          this.startRecordVideo()
-        }
+      if (event.target.closest('.video-icon')) {
+        this.typePost = 'video';
+        this.startRecordVideo();
+      }
 
-      if(event.target.closest('.block-track-submit')) {
+      if (event.target.closest('.block-track-submit')) {
         if (this.typePost === 'audio') {
           this.newAudio.stopRecordAudio();
         } else if (this.typePost === 'video') {
@@ -85,7 +85,7 @@ export default class WidgetController {
         this.timerStop();
       }
 
-      if(event.target.closest('.block-track-cancel')) {
+      if (event.target.closest('.block-track-cancel')) {
         if (this.typePost === 'audio') {
           this.newAudio.cancellationRecordAudio();
         } else if (this.typePost === 'video') {
@@ -107,18 +107,18 @@ export default class WidgetController {
       this.handlerCoord.showHandlerCoord();
     }
   }
-  
+
   checkAPI() {
     this.capabilityGeolocation = !!navigator.geolocation;
   }
 
   timerStart() {
-    let ms = 0
+    let ms = 0;
     this.widget.trackTimer.textContent = moment(ms).format('mm:ss');
     this.timer = setInterval(() => {
       ms += 1000;
       this.widget.trackTimer.textContent = moment(ms).format('mm:ss');
-    }, 1000)
+    }, 1000);
   }
 
   timerStop() {
@@ -127,28 +127,30 @@ export default class WidgetController {
   }
 
   startRecordAudio() {
-    this.newAudio.recordAudio( 
-      () => this.getCoordinate(pos => this.newAudio.setCoorditateCurrentElement(pos.coords)), 
+    this.newAudio.recordAudio(
+      () => this.getCoordinate((pos) => this.newAudio.setCoorditateCurrentElement(pos.coords)),
       this.widget.postList, () => {
         this.widget.activateAudio();
         this.timerStart();
-      }, () => this.errorPermissions.openPermissionError());
-  };
+      }, () => this.errorPermissions.openPermissionError(),
+    );
+  }
 
   startRecordVideo() {
-        this.newVideo.recordVideo(
-      () => this.getCoordinate(pos => this.newVideo.setCoorditateCurrentElement(pos.coords)),
-      this.widget.postList, 
-      this.widget.videoStream, 
+    this.newVideo.recordVideo(
+      () => this.getCoordinate((pos) => this.newVideo.setCoorditateCurrentElement(pos.coords)),
+      this.widget.postList,
+      this.widget.videoStream,
       () => {
         this.widget.activateVideo();
         this.timerStart();
-      }, () => this.errorPermissions.openPermissionError());
-  };
+      }, () => this.errorPermissions.openPermissionError(),
+    );
+  }
 
   submitFuncValidate() {
     const value = this.handlerCoord.checkInputText(this.handlerCoord.input.value);
-    if(!value) {
+    if (!value) {
       this.handlerCoord.createValidationHandlerCoord('Введите значения широты и долготы через запятую');
       return false;
     }
@@ -176,5 +178,4 @@ export default class WidgetController {
     this.inputText = null;
     this.typePost = null;
   }
-
 }

@@ -1,4 +1,3 @@
-
 export default class HandlerCoordBlock {
   constructor() {
   }
@@ -6,15 +5,15 @@ export default class HandlerCoordBlock {
   init() {
     this.drawHandlerCoord();
     this.input.addEventListener('focus', () => {
-      console.log('focus')
+      console.log('focus');
       this.removeValidationHandlerCoord();
-    })
+    });
   }
 
   drawHandlerCoord() {
     this.blockHandlerCoord = document.createElement('div');
     this.blockHandlerCoord.classList.add('wrapper-handlercoord-coord', 'disable');
-    this.blockHandlerCoord.innerHTML =`<div class="handlercoord-coord">
+    this.blockHandlerCoord.innerHTML = `<div class="handlercoord-coord">
                             <div class="handlercoord-desc">
                               <p class="handlercoord-text">Что-то пошло не так</p>
                               <p class="handlercoord-text">К сожалению, нам не удалось определить ваше местоположение, пожалуйста, дайте разрешение на использование геолокации, либо введите координаты вручную.</p>
@@ -38,7 +37,7 @@ export default class HandlerCoordBlock {
                           </div>`;
     document.body.appendChild(this.blockHandlerCoord);
     this.form = this.blockHandlerCoord.querySelector('.form-handlercoord');
-    this.blockInputCoord = this.blockHandlerCoord.querySelector('.block-input-coord')
+    this.blockInputCoord = this.blockHandlerCoord.querySelector('.block-input-coord');
     this.input = this.blockHandlerCoord.querySelector('.input-coord');
     this.handlerCoordInput = this.blockHandlerCoord.querySelector('.validation-handlercoord');
   }
@@ -57,33 +56,33 @@ export default class HandlerCoordBlock {
       return false;
     }
 
-    let value = data.replace(/[−*+?^${}()|[\]\\]/g, ' ').split(',').map(item => item.trim());
+    const value = data.replace(/[−*+?^${}()|[\]\\]/g, ' ').split(',').map((item) => item.trim());
 
     if (value.length !== 2) {
       return false;
     }
 
-    const existIsNaN = value.find(i => isNaN(Number(i)) )
+    const existIsNaN = value.find((i) => isNaN(Number(i)));
     if (existIsNaN) {
       return false;
     }
     return {
-        latitude: Number(value[0]),
-        longitude: Number(value[1]),
-      }
+      latitude: Number(value[0]),
+      longitude: Number(value[1]),
+    };
   }
 
   createValidationHandlerCoord(text) {
     this.handlerCoordInput.classList.remove('disable');
     this.input.classList.add('input-handlercoord');
-    this.handlerCoordInput.style.top = this.input.offsetTop + this.input.offsetHeight + 'px';
-    this.handlerCoordInput.style.left = this.input.offsetLeft + 'px';
+    this.handlerCoordInput.style.top = `${this.input.offsetTop + this.input.offsetHeight}px`;
+    this.handlerCoordInput.style.left = `${this.input.offsetLeft}px`;
     this.handlerCoordInput.textContent = text;
-  } 
+  }
 
   removeValidationHandlerCoord() {
     this.handlerCoordInput.textContent = '';
     this.handlerCoordInput.classList.add('disable');
     this.input.classList.remove('input-handlercoord');
-  } 
+  }
 }
